@@ -1,4 +1,4 @@
-import { Rent, VehicleType } from "@prisma/client";
+import { Rent, Vehicle, VehicleType } from "@prisma/client";
 import { prisma } from "./prisma.config";
 import { MostVehicleRentedProps } from "@/types/chart";
 
@@ -20,7 +20,7 @@ export class ChartGenerator {
      */
     async getVehiculesByStatus(status: string) {
         return (await prisma.vehicle.findMany())
-            .filter((vehicle) => vehicle.status === status);
+            .filter((vehicle: Vehicle) => vehicle.status === status);
     }
 
     /**
