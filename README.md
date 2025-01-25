@@ -33,6 +33,7 @@ Este es un sistema web de administración de rentas de vehículos, desarrollado 
 
 - **Base de Datos:**  
   - [PostgreSQL](https://www.postgresql.org/)
+  - [Neon](https://neon.tech/)
 
 - **Despliegue:**  
   - [Vercel](https://vercel.com/)
