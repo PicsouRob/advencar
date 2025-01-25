@@ -34,7 +34,7 @@ export const inspectionColumns: ColumnDef<Inspection>[] = [
         cell: ({ row }) => {
             return (
                 <p
-                    className={`text-center rounded px-1 ${row.original.status === "Aprobada" ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"}`}
+                    className={`text-center rounded px-1 ${row.original.status === "Completado" ? "text-green-600 bg-green-50" : "text-red-600 bg-red-50"}`}
                 >
                     {row.original.status}
                 </p>

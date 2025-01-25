@@ -293,7 +293,7 @@ const InspectionSheet: React.FC<InspectionSheetProps> = ({
 
                                                 <SelectContent>
                                                     <SelectItem value="Pendiente">Pendiente</SelectItem>
-                                                    <SelectItem value="Aprobado">Aprobado</SelectItem>
+                                                    <SelectItem value="Completado">Completado</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>

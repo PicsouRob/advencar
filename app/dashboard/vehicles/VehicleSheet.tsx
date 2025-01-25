@@ -306,7 +306,7 @@ const VehicleSheet: React.FC<VehicleSheetProps> = ({
                                                 <SelectContent>
                                                     <SelectItem value="Disponible">Disponible</SelectItem>
                                                     <SelectItem value="Alquilado">Alquilado</SelectItem>
-                                                    <SelectItem value="En reparación">En Reparación</SelectItem>
+                                                    <SelectItem value="En reparación">En reparación</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
