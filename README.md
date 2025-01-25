@@ -24,6 +24,7 @@ Este es un sistema web de administración de rentas de vehículos, desarrollado 
   - [ShadCN](https://ui.shadcn.com/) (Componentes UI)
   - [React Hook Form](https://react-hook-form.com/) (Manejo de formularios)
   - [Zod](https://zod.dev/) (Validación de datos)
+  - [React-to-print](https://www.npmjs.com/package/react-to-print) (Impresión de informes)
 
 - **Backend:**  
   - [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction) (Manejo de API)
@@ -35,7 +36,6 @@ Este es un sistema web de administración de rentas de vehículos, desarrollado 
 
 - **Despliegue:**  
   - [Vercel](https://vercel.com/)
-  - [Docker](https://www.docker.com/) (opcional)
 
 ---
 

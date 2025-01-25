@@ -1,22 +1,21 @@
-/* eslint-disable no-var */
 import { PrismaClient } from '@prisma/client';
+import { neonConfig, Pool } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
-let prisma: PrismaClient;
+import ws from 'ws';
+neonConfig.webSocketConstructor = ws;
+neonConfig.poolQueryViaFetch = true;
 
-declare global {
-    var __db: PrismaClient | undefined
-}
+// declare global {
+//     var __db: PrismaClient | undefined
+// }
 
-if(process.env.NODE_ENV === 'production') {
-    prisma = new PrismaClient();
-    prisma.$connect();
-} else {
-    if(!global.__db) {
-        global.__db = new PrismaClient();
-        global.__db.$connect();
-    }
+const connectionString = `${process.env.DATABASE_URL}`;
 
-    prisma = global.__db;
-}
+const pool = new Pool({ connectionString });
+const adapter = new PrismaNeon(pool);
+const prisma = global.prisma || new PrismaClient({ adapter });
+
+if(process.env.NODE_ENV === 'production') global.prisma = prisma;
 
 export { prisma };
