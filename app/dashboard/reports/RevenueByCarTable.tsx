@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import { Brand, Model, Rent, Vehicle, VehicleType } from "@prisma/client";
 import { getListData } from "@/utils/handleFetchAction";
+import { LoaderIcon } from "lucide-react";
+import { formatMoney } from "@/utils/formatMoney";
 
 type RevenueByCarTableProps = {
     rents: Rent[];
@@ -64,11 +66,12 @@ const RevenueByCarTable: React.FC<RevenueByCarTableProps> = ({
                 type: vehicleTypes.find((vehicleType) => vehicleType.id === vehicle.vehicleTypeId)!.description,
                 brand: brands.find((brand) => brand.id === vehicle.brandId)!.description,
                 model: models.find((model) => model.id === vehicle.modelId)!.description,
-                rentedTimes,
-                revenue: totalRevenue
+                rentedTimes, revenue: totalRevenue
             };
         });
     }
+
+    const totalRevenue = getTotalIncomesByVehicle().reduce((acc, vehicle) => acc + vehicle.revenue, 0);
 
     return (
         <div className="space-y-4">
@@ -78,7 +81,9 @@ const RevenueByCarTable: React.FC<RevenueByCarTableProps> = ({
                 <div className="flex items-center justify-between gap-4 p-5">
                     <h2 className="font-bold">Total ingresos</h2>
 
-                    <p className="font-semibold">{ "$" } { getTotalIncomesByVehicle().reduce((acc, vehicle) => acc + vehicle.revenue, 0) }</p>
+                    <p className="font-medium">
+                        {formatMoney(totalRevenue)}
+                    </p>
                 </div>
 
                 <table className=" min-w-full  rounded-xl">
@@ -95,7 +100,7 @@ const RevenueByCarTable: React.FC<RevenueByCarTableProps> = ({
                     </thead>
 
                     <tbody className="divide-y divide-gray-300">
-                        {getTotalIncomesByVehicle().map((vehicle, index) => (
+                        {getTotalIncomesByVehicle().length > 0 ? getTotalIncomesByVehicle().map((vehicle, index) => (
                             <tr key={index} className="">
                                 <td
                                     className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"
@@ -128,12 +133,16 @@ const RevenueByCarTable: React.FC<RevenueByCarTableProps> = ({
                                     {vehicle.rentedTimes}
                                 </td>
                                 <td
-                                    className="p-5 whitespace-nowrap text-sm leading-6 text-gray-900 font-semibold"
+                                    className="p-5 whitespace-nowrap text-sm leading-6 text-gray-900 font-medium"
                                 >
-                                    ${vehicle.revenue}
+                                    {formatMoney(vehicle.revenue)}
                                 </td>
                             </tr>
-                        ))}
+                        )) : <tr className="border-b border-gray-200">
+                            <td colSpan={5} className="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                                <LoaderIcon className="animate-spin text-primary" />
+                            </td>
+                        </tr>}
                     </tbody>
                 </table>
             </div>
@@ -141,4 +150,4 @@ const RevenueByCarTable: React.FC<RevenueByCarTableProps> = ({
     );
 }
 
-export default RevenueByCarTable
+export default RevenueByCarTable;

@@ -1,6 +1,7 @@
 import { Rent, Vehicle, VehicleType } from "@prisma/client";
 import { prisma } from "./prisma.config";
-import { MostVehicleRentedProps } from "@/types/chart";
+import { MostVehicleTypeRentedProps } from "@/types/chart";
+import { formatMoney } from "@/utils/formatMoney";
 
 export class ChartGenerator {
     async getRents(): Promise<Rent[]> {
@@ -27,7 +28,7 @@ export class ChartGenerator {
      * Get the most vehicles rented 
      * @returns MostVehicleRentedProps[] agrouped by Description
      */
-    async getMostVehicleRented(): Promise<MostVehicleRentedProps[]> { 
+    async getMostVehicleTypeRented(): Promise<MostVehicleTypeRentedProps[]> { 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const rents: any[] = await this.getRents();
         const vehiclesType: VehicleType[] = await this.getVehiclesTypes();
@@ -39,9 +40,9 @@ export class ChartGenerator {
                 const moneyGenerated = vehiclesRented.reduce((acc, rent) => acc + rent.dailyRate * rent.days, 0);
 
                 return {
-                    vehicle: vehicleType.description,
-                    total: totalRents,
-                    moneyGenerated: moneyGenerated,
+                    vehicleType: vehicleType.description.toLowerCase(),
+                    total: totalRents, moneyGenerated: formatMoney(moneyGenerated),
+                    fill: `var(--color-${vehicleType.description.toLowerCase()})`
                 };
             })
         );

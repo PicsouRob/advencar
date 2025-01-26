@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         await prisma.vehicle.update({
             where: { id: body.vehicleId },
             data: {
-                status: body.status === "Finalizado" ? "Disponible" : "Alquilado",
+                status: "Alquilado",
             },
         });
 

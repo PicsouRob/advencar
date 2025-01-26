@@ -1,3 +1,4 @@
+import { formatMoney } from "@/utils/formatMoney";
 
 type WidgetStatisticsProps = {
     compareTo: string;
@@ -16,10 +17,10 @@ const WidgetStatistics: React.FC<WidgetStatisticsProps> = ({
                 {widgetFor}
             </p>
             
-            <p className="text-xl font-semibold"> { moneyStatistics && "$" } { total }</p>
+            <p className="font-semibold"> { moneyStatistics ? formatMoney(total) : total }</p>
             
             <p className="text-sm text-muted-foreground">
-                <span className="">{ moneyStatistics && "$" } { lastData }</span> {compareTo}
+                <span className="">{ moneyStatistics ? formatMoney(lastData) : lastData } { compareTo } </span>
             </p>
         </div>
     );

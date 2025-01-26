@@ -15,7 +15,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ error }) => {
             <TriangleAlertIcon className="size-4" />
 
             <span className="text-sm flex-1">
-                {error}.
+                {error}
             </span>
         </Alert>
     );

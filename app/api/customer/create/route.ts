@@ -44,6 +44,16 @@ export async function POST(req: Request) {
             }, { status: 400 });
         }
 
+        const existedCreditCardCustomer = await prisma.customer.findFirst({
+            where: { creditCard: body.creditCard },
+        });
+
+        if (existedCreditCardCustomer) {
+            return NextResponse.json({
+                message: "Ya existe un cliente con la misma tarjeta de crédito.",
+            }, { status: 400 });
+        }
+
         await prisma.customer.create({ data: body });
 
         return NextResponse.json({

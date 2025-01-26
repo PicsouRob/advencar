@@ -1,12 +1,11 @@
 import { VehiclesChart } from "@/components/charts/VehiclesChart";
-import { RentChartBar } from "@/components/charts/RentChart";
 import { ChartGenerator } from "@/libs/chartGenerator";
 import WidgetStatistics from "./WidgetStatistics";
-// import { MostRentedVehicle } from "@/components/charts/MostRentedVehicle";
-import { MostVehicleRentedProps } from "@/types/chart";
 import { StatisticsData } from "@/libs/statisticsData";
 import { Rent } from "@prisma/client";
 import { prisma } from "@/libs/prisma.config";
+import { TotalRentByVehicleType } from "@/components/charts/TotalRentByVehicleType";
+import { MostVehicleTypeRentedProps } from "@/types/chart";
 
 type ChartDataProps = {
     status: string;
@@ -46,8 +45,8 @@ const Dashboard: React.FC = async () => {
     const totalRentsForLastMonth: number = await statisticsData.getTotalRentsForMonth(new Date().getMonth() - 1);
     const totalRentsForLastYear: number = await statisticsData.getTotalRentsForYear(new Date().getFullYear() - 1);
 
-    const mostRentedVehicles: MostVehicleRentedProps[] = await chartGenerator.getMostVehicleRented();
-    console.log(mostRentedVehicles);
+    const mostRentedVehiclesType: MostVehicleTypeRentedProps[] = await chartGenerator.getMostVehicleTypeRented();
+    console.log(mostRentedVehiclesType);
 
     return (
         <div className="space-y-4">
@@ -90,8 +89,8 @@ const Dashboard: React.FC = async () => {
             </div>
 
             <div className="grid xl:grid-cols-2 gap-4">
-                <RentChartBar />
-                {/* <MostRentedVehicle chartData={mostRentedVehicles} /> */}
+                <TotalRentByVehicleType chartData={mostRentedVehiclesType} />
+
                 <VehiclesChart chartData={chartData} />
             </div>
 

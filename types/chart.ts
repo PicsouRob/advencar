@@ -1,5 +1,6 @@
-export type MostVehicleRentedProps = {
-    vehicle: string;
+export type MostVehicleTypeRentedProps = {
+    vehicleType: string;
     total: number;
-    moneyGenerated: number;
+    moneyGenerated: string;
+    fill: string;
 }

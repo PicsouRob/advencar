@@ -29,6 +29,14 @@ export async function PUT(req: Request) {
             data: body,
         });
 
+        // update vehicle status
+        await prisma.vehicle.update({
+            where: { id: body.vehicleId },
+            data: {
+                status: body.status === "Finalizado" ? "Disponible" : "Alquilado",
+            },
+        });
+
         return NextResponse.json({
             message: "Alquiler actualizado con éxito.",
         }, { status: 200 });

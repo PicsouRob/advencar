@@ -16,7 +16,8 @@ const PrintToPdf = () => {
   const [rents, setRents] = useState<Rent[]>([]);
   
   const reactToPrintFn: UseReactToPrintFn = useReactToPrint({
-    contentRef, documentTitle: `advencar_reportes_para_${formatDate(new Date().toDateString())}`, pageStyle: '12px 8px'
+    contentRef, documentTitle: `advencar_reportes_para_${
+      formatDate(new Date().toDateString())}`, pageStyle: '12px 8px'
   });
   
   useEffect(() => {

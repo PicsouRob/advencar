@@ -65,3 +65,39 @@ export const isValidCreditCard = (creditCard: string): boolean => {
 
     return sum % 10 === 0;
 }
+
+/**
+ * Valid RNC (Registro Nacional de Cuentas) number in Dominican Republic.
+ * @param rnc The RNC number to validate.
+ * @returns True if the RNC number is valid, false otherwise.
+ */
+export const isValidRNC = (rnc: string): boolean => {
+    const weight: number[] = [7, 9, 8, 6, 5, 4, 3, 2];
+    let sum: number = 0;
+
+    if (!/^\d{9}$/.test(rnc) || rnc.length !== 9) {
+        return false;
+    }
+
+    for (let i = 0; i < 8; i++) {
+        const rncDigit: number = parseInt(rnc.charAt(i), 10);
+
+        sum += rncDigit * weight[i];
+    }
+
+    const division: number = Math.floor(sum / 11);
+    const rest = sum - (division * 11);
+    let verificatorDigit: number;
+    
+    if (rest === 0) {
+        verificatorDigit = 2;
+    } else if (rest === 1) {
+        verificatorDigit = 1;
+    } else {
+        verificatorDigit = 11 - rest;
+    }
+    
+    const lastRncDigit: number = parseInt(rnc.charAt(8), 10);
+    
+    return verificatorDigit === lastRncDigit;
+};

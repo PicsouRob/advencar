@@ -2,7 +2,8 @@
 
 import { TrendingUp } from "lucide-react";
 import {
-    CartesianGrid, LabelList, Line, LineChart, XAxis
+    CartesianGrid, LabelList, Line, LineChart, XAxis,
+    YAxis
 } from "recharts";
 
 import {
@@ -41,7 +42,7 @@ export function VehiclesChart(
             <CardHeader>
                 <CardTitle>Estado de Vehículos</CardTitle>
 
-                <CardDescription>{formatDate().toUpperCase()}</CardDescription>
+                <CardDescription>{formatDate()}</CardDescription>
             </CardHeader>
 
             <CardContent>
@@ -51,7 +52,7 @@ export function VehiclesChart(
                         data={chartData}
                         margin={{
                             top: 20,
-                            left: 12,
+                            left: 0,
                             right: 12,
                         }}
                     >
@@ -59,11 +60,11 @@ export function VehiclesChart(
 
                         <XAxis
                             dataKey="status"
-                            tickLine={false}
-                            axisLine={false}
                             tickMargin={8}
                             tickFormatter={(value) => value}
                         />
+
+                        <YAxis dataKey="data" type="number" />
 
                         <ChartTooltip
                             cursor={false}

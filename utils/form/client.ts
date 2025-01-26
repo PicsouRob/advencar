@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { isValidCreditCard, isValidDocumentId } from "../validateDocument";
+import { isValidCreditCard, isValidDocumentId, isValidRNC } from "../validateDocument";
 
 export const clientFormSchema = z.object({
     id: z.number().optional(),
@@ -11,12 +11,7 @@ export const clientFormSchema = z.object({
     documentId: z.string({
         required_error: "El documento es obligatorio.",
         invalid_type_error: "El documento debe ser cadena numérica.",
-    })
-        .nonempty({ message: "El documento es obligatorio." })
-        .length(11, { message: "El documento debe ser de 11 dígitos." })
-        .refine((value) => isValidDocumentId(value), {
-            message: "El documento proporcionado no es válido. Verifica que los dígitos sean correctos y cumplan con el formato.",
-        }),
+    }).nonempty({ message: "El documento es obligatorio." }),
     creditCard: z.string({
         required_error: "El número de tarjeta de crédito es obligatorio.",
         invalid_type_error: "El número de tarjeta de crédito debe ser una cadena numérica.",
@@ -41,6 +36,43 @@ export const clientFormSchema = z.object({
         required_error: "El estado es obligatorio.",
         invalid_type_error: "El estado debe ser una cadena de texto.",
     }).nonempty({ message: "El estado es obligatorio." }).default("Activo"),
-});
+})
+    .refine((data) => {
+        if (data.personType === "Física" && data.documentId.length !== 11) {
+            return false;
+        }
+
+        return true;
+    }, {
+        message: "El documento debe ser de 11 dígitos.", path: ["documentId"]
+    })
+    .refine((data) => {
+        if (data.personType === "Física") {
+            return isValidDocumentId(data.documentId);
+        };
+
+        return true;
+    }, {
+        message: "El id del documento no es válido.", path: ["documentId"]
+        
+    })
+    .refine((data) => {
+        if (data.personType === "Jurídica" && data.documentId.length !== 9) {
+            return false;
+        }
+
+        return true;
+    }, {
+        message: "El RNC debe ser de 9 dígitos.", path: ["documentId"]
+    })
+    .refine((data) => {
+        if (data.personType === "Jurídica") {
+            return isValidRNC(data.documentId);
+        }
+
+        return true;
+    }, {
+        message: "El RNC no es válido.", path: ["documentId"]
+    });
 
 export type ClientFormSchema = z.infer<typeof clientFormSchema>;

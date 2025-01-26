@@ -81,7 +81,7 @@ const CustomerSheet: React.FC<CustomerSheetProps> = ({
         >
             <div className="h-full">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-y-3 justify-between flex-col h-full pb-[10rem]">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex space-y-3 flex-col h-full pb-[10rem]">
                         {error && <ErrorMessage error={error} />}
                         
                         <div className="space-y-5 overflow-auto">

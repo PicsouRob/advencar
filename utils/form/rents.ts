@@ -30,12 +30,13 @@ export const rentFormSchema = z.object({
         .date({
             required_error: "La fecha de alquiler es obligatoria.",
             invalid_type_error: "La fecha de alquiler es invalido.",
-        })
-        .min(today, { message: "La fecha de alquiler no puede ser anterior a la fecha actual." }),
+        }),
+        // .min(today, { message: "La fecha de alquiler no puede ser anterior a la fecha actual." }),
     returnDate: z.coerce.date({
         required_error: "La fecha de retorno es obligatoria.",
         invalid_type_error: "La fecha de retorno es invalido.",
-    }).min(today, { message: "La fecha de retorno no puede ser anterior a la fecha actual." }),
+    }),
+        // .min(today, { message: "La fecha de retorno no puede ser anterior a la fecha actual." }),
     dailyRate: z.number({
         required_error: "La tarifa diaria es obligatoria.",
         invalid_type_error: "La tarifa diaria es invalido.",
