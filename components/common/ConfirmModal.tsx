@@ -8,6 +8,7 @@ import {
     DialogHeader, DialogTitle, DialogTrigger
 } from '../ui/dialog';
 import { Button } from '../ui/button';
+import { useRouter } from 'next/navigation';
 
 interface ConfirmModalProps { 
     title: string;
@@ -21,13 +22,15 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 }) => {
     const [isPending, startTransition] = useTransition();
     const [isOpen, setIsOpen] = useState(false);
+    const router = useRouter();
 
     const handleConfirm = () => {
         startTransition(async () => {
             await onConfirm();
-        });
 
-        setIsOpen(false);
+            setIsOpen(false);
+            router.refresh();
+        });
     };
 
     return (

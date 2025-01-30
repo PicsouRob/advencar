@@ -10,6 +10,8 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import InspectionSheet from "./InspectionSheet";
 import InspectionDetailSheet from "./InspectionDetailSheet";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { formatDate } from "@/utils/date";
 
 export const inspectionColumns: ColumnDef<Inspection>[] = [
     // {
@@ -58,14 +60,8 @@ export const inspectionColumns: ColumnDef<Inspection>[] = [
         cell: ({ getValue }) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const rawDate: any = getValue(); // Original Value
-            const date = new Date(rawDate); // Convert to Date Object
 
-            return date.toLocaleDateString("es-ES", {
-                weekday: "short",
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-            });  // Format the date
+            return formatDate(rawDate);   // Format the date
         },
     },
     {
@@ -105,11 +101,16 @@ export const inspectionColumns: ColumnDef<Inspection>[] = [
                             await handleDeleteAction(`/api/inspection/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Inspection",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}

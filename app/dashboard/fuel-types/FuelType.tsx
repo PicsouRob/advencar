@@ -5,15 +5,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, 
+    FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, 
+    SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import ModalWrapper from "@/components/common/ModalWrapper";
 import { fuelTypeFormSchema, FuelTypeFormSchema } from "@/utils/form/fuel-type";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { FuelType } from "@prisma/client";
 import { handleFetchAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface FuelTypeModalProps {
     fuelType?: FuelType;
@@ -24,7 +28,9 @@ interface FuelTypeModalProps {
 const FuelTypeModal: React.FC<FuelTypeModalProps> = ({
     fuelType, updateFuelType, children
 }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const router = useRouter();
 
     const form = useForm<FuelTypeFormSchema>({
         resolver: zodResolver(fuelTypeFormSchema),
@@ -49,10 +55,14 @@ const FuelTypeModal: React.FC<FuelTypeModalProps> = ({
 
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
-                    alert(message);
-                    
-                    window.location.reload();
+                if (isCompleted) {
+                    setIsOpen(false);
+                    router.refresh();
+
+                    toast({
+                        title: "Gestion de Tipo de Combustible",
+                        description: message,
+                    });
                 } else {
                     setError(message);
                 }
@@ -62,6 +72,7 @@ const FuelTypeModal: React.FC<FuelTypeModalProps> = ({
 
     return (
         <ModalWrapper
+            open={isOpen} setOpen={setIsOpen}
             title={updateFuelType ? "Editar Tipo de Combustible" : "Añadir Tipo de Combustible"}
             description={updateFuelType ? `LLena el formulario para editar el tipo de combustible ${fuelType?.description}`
                 : "LLena el formulario para añadir un nuevo tipo de combustible a la lista."

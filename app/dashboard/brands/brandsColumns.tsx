@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import BrandModal from "./BrandModal";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
 
 export const brandsColumns: ColumnDef<Brand>[] = [
     {
@@ -68,11 +69,16 @@ export const brandsColumns: ColumnDef<Brand>[] = [
                             await handleDeleteAction(`/api/brand/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Marca",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}

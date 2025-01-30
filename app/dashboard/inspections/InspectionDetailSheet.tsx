@@ -17,6 +17,7 @@ type InspectionDetailSheetProps = {
 const InspectionDetailSheet: React.FC<InspectionDetailSheetProps> = ({
     inspection, children
 }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [vehicleName, setVehicleName] = useState<string>("");
     const [customerName, setCustomerName] = useState<string>("");
     const [employeeName, setEmployeeName] = useState<string>("");
@@ -40,6 +41,7 @@ const InspectionDetailSheet: React.FC<InspectionDetailSheetProps> = ({
 
     return (
         <SheetWrapper
+            isOpen={isOpen} setOpen={setIsOpen}
             title="Detalles de Inspection"
             description={`Detalles de la inspection ${vehicleName}.`}
             trigger={children}

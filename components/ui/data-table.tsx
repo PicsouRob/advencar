@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         state: {
-            sorting, columnFilters, columnVisibility
+            sorting, columnFilters, columnVisibility,
         }
     });
 
@@ -51,7 +51,12 @@ export function DataTable<TData, TValue>({
                 <Input
                     placeholder={`Buscar por ${hint}`}
                     value={(table.getColumn(searchBy)?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn(searchBy)?.setFilterValue(event.target.value)}
+                    onChange={(event) => {
+                        const value = event.target.value;
+                        table.getColumn(searchBy)?.setFilterValue(value);
+
+                        table.setGlobalFilter(value);
+                    }}
                     className="max-w-sm"
                 />
 

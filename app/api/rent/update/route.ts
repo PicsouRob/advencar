@@ -19,7 +19,9 @@ export async function PUT(req: Request) {
         if (!validateRent.success) {
             const { errors } = validateRent.error;
 
-            return NextResponse.json({ errors }, { status: 400 });
+            return NextResponse.json({ 
+                message: errors.map(error => error.message).join(", ")
+             }, { status: 400 });
         }
 
         await prisma.rent.update({
@@ -27,14 +29,6 @@ export async function PUT(req: Request) {
                 id: Number(body.id),
             },
             data: body,
-        });
-
-        // update vehicle status
-        await prisma.vehicle.update({
-            where: { id: body.vehicleId },
-            data: {
-                status: body.status === "Finalizado" ? "Disponible" : "Alquilado",
-            },
         });
 
         return NextResponse.json({

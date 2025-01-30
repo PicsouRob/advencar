@@ -9,6 +9,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import TooltipWrapper from "@/components/common/TooltipWrapper";
 import CustomerSheet from "./CustomerSheet";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
 
 export const customersColumns: ColumnDef<Customer>[] = [
     {
@@ -80,11 +81,16 @@ export const customersColumns: ColumnDef<Customer>[] = [
                             await handleDeleteAction(`/api/customer/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Cliente",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}

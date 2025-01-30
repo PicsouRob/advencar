@@ -19,7 +19,9 @@ export async function PUT(req: Request) {
         if (!validateModel.success) {
             const { errors } = validateModel.error;
 
-            return NextResponse.json({ errors }, { status: 400 });
+            return NextResponse.json({ 
+                message: errors.map(error => error.message).join(", ")
+             }, { status: 400 });
         }
 
         await prisma.model.update({

@@ -14,6 +14,8 @@ import { modelFormSchema, ModelFormSchema } from "@/utils/form/models";
 import { Brand, Model } from "@prisma/client";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { getListData, handleFetchAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface ModelModalProps {
     model?: Model;
@@ -24,8 +26,10 @@ interface ModelModalProps {
 const ModelModal: React.FC<ModelModalProps> = ({
     model, updateModel, children
 }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [modelBrands, setModelBrands] = useState<Brand[]>([]);
+    const router = useRouter();
 
     const form = useForm<ModelFormSchema>({
         resolver: zodResolver(modelFormSchema),
@@ -59,10 +63,14 @@ const ModelModal: React.FC<ModelModalProps> = ({
         
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
-                    alert(message);
-                    
-                    window.location.reload();
+                if (isCompleted) {
+                    setIsOpen(false);
+                    router.refresh();
+
+                    toast({
+                        title: "Gestion de Modelo",
+                        description: message,
+                    });
                 } else {
                     setError(message);
                 }
@@ -72,6 +80,7 @@ const ModelModal: React.FC<ModelModalProps> = ({
 
     return (
         <ModalWrapper
+            open={isOpen} setOpen={setIsOpen}
             title={updateModel ? "Editar Modelo" : "Añadir Modelo"}
             description={updateModel ? `LLena el formulario para editar el modelo ${model?.description}`
                 : "LLena el formulario para añadir un nuevo modelo a la lista."
@@ -93,7 +102,7 @@ const ModelModal: React.FC<ModelModalProps> = ({
                                         <FormControl>
                                             <Select
                                                 {...field}
-                                                value={field.value.toString()}
+                                                value={field.value ? field.value.toString() : ""}
                                                 onValueChange={(value) => field.onChange(parseInt(value, 10))}
                                             >
                                                 <SelectTrigger>

@@ -83,12 +83,12 @@ body {
   * {
     @apply border-border;
   }
+
     body {
-    @apply bg-background text-foreground;
+      @apply bg-background text-foreground;
     }
-    
+  
     app-transition {
       @apply transition-all duration-200 ease-in-out;
     }
 }
- 

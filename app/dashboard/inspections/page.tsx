@@ -18,7 +18,11 @@ const Inspections: React.FC = async () => {
                 <InspectionSheet />
             </div>
 
-            <DataTable hint="vehiculo" columns={inspectionColumns} data={inspections} searchBy="tireStatus" />
+            <DataTable hint="vehiculo" 
+                columns={inspectionColumns} 
+                data={inspections} 
+                searchBy="status"
+            />
         </div>
     );
 }

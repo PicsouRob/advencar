@@ -14,6 +14,8 @@ import { vehicleFormSchema, VehicleFormSchema } from "@/utils/form/vehicles";
 import { Brand, FuelType, Model, Vehicle, VehicleType } from "@prisma/client";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { getListData, handleFetchAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface VehicleSheetProps {
     vehicle?: Vehicle;
@@ -24,11 +26,13 @@ interface VehicleSheetProps {
 const VehicleSheet: React.FC<VehicleSheetProps> = ({
     vehicle, updateVehicle, children
 }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [brands, setBrands] = useState<Brand[]>([]);
     const [models, setModels] = useState<Model[]>([]);
     const [fuelTypes, setFuelTypes] = useState<FuelType[]>([]);
     const [vehicleTypes, setVehicleTypes] = useState<VehicleType[]>([]);
+    const router = useRouter();
 
     const form = useForm<VehicleFormSchema>({
         resolver: zodResolver(vehicleFormSchema),
@@ -78,10 +82,14 @@ const VehicleSheet: React.FC<VehicleSheetProps> = ({
 
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
-                    alert(message);
-                    
-                    window.location.reload();
+                if (isCompleted) {
+                    router.refresh();
+                    setIsOpen(false);
+
+                    toast({
+                        title: "Gestion de Vehículo",
+                        description: message,
+                    });
                 } else {
                     setError(message);
                 }   
@@ -91,6 +99,7 @@ const VehicleSheet: React.FC<VehicleSheetProps> = ({
 
     return (
         <SheetWrapper
+            isOpen={isOpen}  setOpen={setIsOpen}
             title={updateVehicle ? "Editar Vehiculo" : "Añadir Vehiculo"}
             description={updateVehicle ? `LLena el formulario para editar el vehiculo ${vehicle?.description}`
                 : "LLena el formulario para añadir un nuevo vehiculo a la lista."

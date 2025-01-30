@@ -17,6 +17,7 @@ import ErrorMessage from "@/components/common/ErrorMessage";
 import { UserSessionProps, useUserSession } from "@/hooks/useUserSession";
 import { getListData, handleFetchAction } from "@/utils/handleFetchAction";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface AddRentSheetProps {
     rent?: Rent;
@@ -29,9 +30,11 @@ const RentSheet: React.FC<AddRentSheetProps> = ({
 }) => {
     const { user }: UserSessionProps = useUserSession();
     const [error, setError] = useState<string>("");
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const { toast } = useToast();
+    const router = useRouter();
 
     useEffect(() => {
         const getData = async () => {
@@ -79,15 +82,15 @@ const RentSheet: React.FC<AddRentSheetProps> = ({
 
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
+                if (isCompleted) {
+                    router.refresh();
+                    setIsOpen(false);
+
                     toast({
                         title: "Creación de alquiler",
                         description: message,
                         duration: 4000,
                     });
-                    
-                    alert(message);
-                    window.location.reload();
                 } else {
                     setError(message);
                 }
@@ -97,6 +100,8 @@ const RentSheet: React.FC<AddRentSheetProps> = ({
 
     return (
         <SheetWrapper
+            isOpen={isOpen}
+            setOpen={setIsOpen}
             title={updateRent ? "Editar Alquiler" : "Añadir Alquiler"}
             description={updateRent ? `LLena el formulario para editar el alquiler ${rent?.vehicleId}`
                 : "LLena el formulario para añadir un nuevo alquiler a la lista."

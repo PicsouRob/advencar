@@ -8,6 +8,8 @@ import TooltipWrapper from "@/components/common/TooltipWrapper";
 import { Rent } from "@prisma/client";
 import RentSheet from "./RentSheet";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { formatDate } from "@/utils/date";
 
 export const rentalColumns: ColumnDef<Rent>[] = [
     {
@@ -35,14 +37,8 @@ export const rentalColumns: ColumnDef<Rent>[] = [
         cell: ({ getValue }) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const rawDate: any = getValue(); // Original Value
-            const date = new Date(rawDate); // Convert to Date Object
 
-            return date.toLocaleDateString("es-ES", {
-                weekday: "short",
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-            });  // Format the date
+            return formatDate(rawDate);  // Format the date
         },
     },
     {
@@ -99,11 +95,16 @@ export const rentalColumns: ColumnDef<Rent>[] = [
                             await handleDeleteAction(`/api/rent/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Alquiler",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}

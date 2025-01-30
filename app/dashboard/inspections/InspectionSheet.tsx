@@ -24,6 +24,8 @@ import { Label } from "@/components/ui/label";
 import { UserSessionProps, useUserSession } from "@/hooks/useUserSession";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { getListData, handleFetchAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface InspectionSheetProps {
     inspection?: Inspection;
@@ -34,11 +36,13 @@ interface InspectionSheetProps {
 const InspectionSheet: React.FC<InspectionSheetProps> = ({
     inspection, updateInspection, children
 }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const { user }: UserSessionProps = useUserSession();
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [employees, setEmployees] = useState<Employee[]>([]);
+    const router = useRouter();
 
     const form = useForm<InspectionFormSchema>({
         resolver: zodResolver(inspectionFormSchema),
@@ -93,10 +97,14 @@ const InspectionSheet: React.FC<InspectionSheetProps> = ({
 
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
-                    alert(message);
-                    
-                    window.location.reload();
+                if (isCompleted) {
+                    setIsOpen(false);
+                    router.refresh();
+
+                    toast({
+                        title: "Gestion de Inspection",
+                        description: message,
+                    });
                 } else {
                     setError(message);
                 }
@@ -106,6 +114,7 @@ const InspectionSheet: React.FC<InspectionSheetProps> = ({
 
     return (
         <SheetWrapper
+            isOpen={isOpen} setOpen={setIsOpen}
             title={updateInspection ? "Editar Inspección" : "Añadir Inspección"}
             description={updateInspection ? `LLena el formulario para editar la inspección ${inspection?.vehicleId}`
                 : "LLena el formulario para añadir una nueva inspection a la lista."

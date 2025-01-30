@@ -20,6 +20,8 @@ import {
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { Customer } from "@prisma/client";
 import { handleFetchAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface CustomerSheetProps {
     client?: Customer;
@@ -30,7 +32,9 @@ interface CustomerSheetProps {
 const CustomerSheet: React.FC<CustomerSheetProps> = ({
     client, updateClient, children
 }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const router = useRouter();
 
     const form = useForm<ClientFormSchema>({
         resolver: zodResolver(clientFormSchema),
@@ -60,10 +64,14 @@ const CustomerSheet: React.FC<CustomerSheetProps> = ({
 
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
-                    alert(message);
-                    
-                    window.location.reload();
+                if (isCompleted) {
+                    setIsOpen(false);
+                    router.refresh();
+
+                    toast({
+                        title: "Gestion de Cliente",
+                        description: message,
+                    });
                 } else {
                     setError(message);
                 }
@@ -73,6 +81,7 @@ const CustomerSheet: React.FC<CustomerSheetProps> = ({
 
     return (
         <SheetWrapper
+            isOpen={isOpen} setOpen={setIsOpen}
             title={updateClient ? "Editar Cliente" : "Añadir Cliente"}
             description={updateClient ? `LLena el formulario para editar el cliente ${client?.name}`
                 : "LLena el formulario para añadir un nuevo cliente a la lista."

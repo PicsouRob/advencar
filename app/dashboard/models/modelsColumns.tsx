@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import ModelModal from "./ModelModal";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
 
 export const modelsColumns: ColumnDef<Model>[] = [
     {
@@ -83,11 +84,16 @@ export const modelsColumns: ColumnDef<Model>[] = [
                             await handleDeleteAction(`/api/model/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Modelo",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}

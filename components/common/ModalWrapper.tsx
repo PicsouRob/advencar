@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import {
     Dialog, DialogContent, DialogDescription, DialogHeader,
     DialogTitle, DialogTrigger
@@ -8,11 +9,15 @@ interface ModalWrapperProps {
     description: string;
     trigger: React.ReactNode;
     children: React.ReactNode;
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const ModalWrapper: React.FC<ModalWrapperProps> = ({ title, description, trigger, children }) => {
+const ModalWrapper: React.FC<ModalWrapperProps> = ({
+    title, description, trigger, children, open, setOpen
+}) => {
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {trigger}
             </DialogTrigger>
@@ -22,6 +27,7 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({ title, description, trigger
             >
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>
+
                     <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
 

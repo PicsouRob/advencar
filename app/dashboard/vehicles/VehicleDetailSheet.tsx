@@ -16,6 +16,7 @@ type VehicleDetailSheetProps = {
 const VehicleDetailSheet: React.FC<VehicleDetailSheetProps> = ({
     vehicle, children
 }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [vehicleName, setVehicleName] = useState<string>("");
     const [brandName, setBrandName] = useState<string>("");
     const [modelName, setModelName] = useState<string>("");
@@ -43,6 +44,7 @@ const VehicleDetailSheet: React.FC<VehicleDetailSheetProps> = ({
 
     return (
         <SheetWrapper
+            isOpen={isOpen} setOpen={setIsOpen}
             title="Detalles del Vehículo"
             description={`Detalles del vehículo ${vehicle.description}.`}
             trigger={children}

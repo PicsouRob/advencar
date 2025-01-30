@@ -10,6 +10,7 @@ import ConfirmModal from "@/components/common/ConfirmModal";
 import VehicleSheet from "./VehicleSheet";
 import VehicleDetailSheet from "./VehicleDetailSheet";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
 
 export const vehiclesColumns: ColumnDef<Vehicle>[] = [
     {
@@ -95,11 +96,16 @@ export const vehiclesColumns: ColumnDef<Vehicle>[] = [
                             await handleDeleteAction(`/api/vehicle/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Vehiculo",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}

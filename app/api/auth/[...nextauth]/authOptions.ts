@@ -52,6 +52,11 @@ export const authOptions: NextAuthOptions = {
                         throw new Error("Tu contraseña es incorrecta.");
                     }
 
+                    // reject if the user is not active
+                    if(user.status === "Inactivo") {
+                        throw new Error("Tu cuenta está desactivada, por favor contacta la administración.");
+                    }
+
                     const accessToken: string = signJwt({
                         id: user.id, role: user.role
                     }, process.env.JWT_USER_ID_SECRET as string, {

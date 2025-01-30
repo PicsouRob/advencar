@@ -14,6 +14,8 @@ import { brandFormSchema, BrandFormSchema } from "@/utils/form/brands";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { Brand } from "@prisma/client";
 import { handleFetchAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 type BrandModalProps = {
     brand?: Brand;
@@ -23,6 +25,8 @@ type BrandModalProps = {
 
 const BrandModal: React.FC<BrandModalProps> = ({ brand, updateBrand, children }) => {
     const [error, setError] = useState<string>("");
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const router = useRouter();
 
     const form = useForm<BrandFormSchema>({
         resolver: zodResolver(brandFormSchema),
@@ -47,10 +51,14 @@ const BrandModal: React.FC<BrandModalProps> = ({ brand, updateBrand, children })
         
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
-                    alert(message);
-                    
-                    window.location.reload();
+                if (isCompleted) {
+                    setIsOpen(false);
+                    router.refresh();
+
+                    toast({
+                        title: "Gestion de Marca",
+                        description: message,
+                    });
                 } else {
                     setError(message);
                 }
@@ -60,6 +68,7 @@ const BrandModal: React.FC<BrandModalProps> = ({ brand, updateBrand, children })
 
     return (
         <ModalWrapper
+            open={isOpen} setOpen={setIsOpen}
             title={updateBrand ? "Editar Marca" : "Añadir Marca"}
             description={updateBrand ? `LLena el formulario para editar la marca ${brand?.description}`
                 : "LLena el formulario para añadir una nueva marca a la lista."

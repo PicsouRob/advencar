@@ -7,13 +7,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import SheetWrapper from "@/components/common/SheetWrapper";
 import { Button } from "@/components/ui/button";
 import { employeeFormSchema, EmployeeFormSchema } from "@/utils/form/employee";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, 
+    FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, 
+    SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { Employee } from "@prisma/client";
 import { handleFetchAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface EmployeeSheetProps {
     employee?: Employee;
@@ -24,7 +28,9 @@ interface EmployeeSheetProps {
 const EmployeeSheet: React.FC<EmployeeSheetProps> = ({
     employee, updateEmployee, children
 }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const router = useRouter();
 
     const form = useForm<EmployeeFormSchema>({
         resolver: zodResolver(employeeFormSchema),
@@ -58,10 +64,14 @@ const EmployeeSheet: React.FC<EmployeeSheetProps> = ({
         
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
-                    alert(message);
-                    
-                    window.location.reload();
+                if (isCompleted) {
+                    setIsOpen(false);
+                    router.refresh();
+
+                    toast({
+                        title: "Gestion de Empleado",
+                        description: message,
+                    });
                 } else {
                     setError(message);
                 }
@@ -71,6 +81,7 @@ const EmployeeSheet: React.FC<EmployeeSheetProps> = ({
 
     return (
         <SheetWrapper
+            isOpen={isOpen} setOpen={setIsOpen}
             title={updateEmployee ? "Editar Empleado" : "Añadir Empleado"}
             description={updateEmployee ? `LLena el formulario para editar el empleado ${employee?.name}`
                 : "LLena el formulario para añadir un nuevo empleado a la lista."

@@ -46,7 +46,6 @@ const Dashboard: React.FC = async () => {
     const totalRentsForLastYear: number = await statisticsData.getTotalRentsForYear(new Date().getFullYear() - 1);
 
     const mostRentedVehiclesType: MostVehicleTypeRentedProps[] = await chartGenerator.getMostVehicleTypeRented();
-    console.log(mostRentedVehiclesType);
 
     return (
         <div className="space-y-4">
@@ -89,9 +88,9 @@ const Dashboard: React.FC = async () => {
             </div>
 
             <div className="grid xl:grid-cols-2 gap-4">
-                <TotalRentByVehicleType chartData={mostRentedVehiclesType} />
-
                 <VehiclesChart chartData={chartData} />
+
+                <TotalRentByVehicleType chartData={mostRentedVehiclesType} />
             </div>
 
             <div className="">

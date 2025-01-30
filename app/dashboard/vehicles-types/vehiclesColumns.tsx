@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import VehicleTypeModal from "./VehicleTypeModal";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
 
 export const vehiclesColumns: ColumnDef<VehicleType>[] = [
     {
@@ -62,18 +63,23 @@ export const vehiclesColumns: ColumnDef<VehicleType>[] = [
                     </VehicleTypeModal>
 
                     <ConfirmModal
-                        title="Eliminar Modelo"
-                        description="¿Estás seguro de que deseas eliminar este modelo?"
+                        title="Eliminar Tipo de Vehículo"
+                        description="¿Estás seguro de que deseas eliminar este tipo de vehículo?"
                         onConfirm={async () => {
                             await handleDeleteAction(
                                 `/api/vehicle-type/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Tipo de Vehículo",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import FuelTypeModal from "./FuelType";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
 
 export const fuelsColumns: ColumnDef<FuelType>[] = [
     {
@@ -62,18 +63,23 @@ export const fuelsColumns: ColumnDef<FuelType>[] = [
                     </FuelTypeModal>
 
                     <ConfirmModal
-                        title="Eliminar Modelo"
-                        description="¿Estás seguro de que deseas eliminar este modelo?"
+                        title="Eliminar Type de Combustible"
+                        description="¿Estás seguro de que deseas eliminar este tipo de combustible?"
                         onConfirm={async () => {
                             await handleDeleteAction(
                                 `/api/fuel-type/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Tipo de Combustible",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}

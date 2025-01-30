@@ -14,7 +14,11 @@ const Brands: React.FC = async () => {
                 <BrandModal />
             </div>
 
-            <DataTable hint="description" columns={brandsColumns} data={brands} searchBy="description" />
+            <DataTable hint="description"
+                columns={brandsColumns}
+                data={brands}
+                searchBy="description"
+            />
         </div>
     );
 }

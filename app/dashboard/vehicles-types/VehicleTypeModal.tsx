@@ -14,6 +14,8 @@ import { vehicleTypeFormSchema, VehicleTypeFormSchema } from "@/utils/form/vehic
 import ErrorMessage from "@/components/common/ErrorMessage";
 import { VehicleType } from "@prisma/client";
 import { handleFetchAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface VehicleTypeModalProps {
     vehicleType?: VehicleType;
@@ -24,7 +26,9 @@ interface VehicleTypeModalProps {
 const VehicleTypeModal: React.FC<VehicleTypeModalProps> = (
     { vehicleType, updateVehicleType, children }
 ) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const router = useRouter();
     
     const form = useForm<VehicleTypeFormSchema>({
         resolver: zodResolver(vehicleTypeFormSchema),
@@ -49,10 +53,14 @@ const VehicleTypeModal: React.FC<VehicleTypeModalProps> = (
         
         await handleFetchAction(
             values, fetchMethod, url, (isCompleted, message) => {
-                if(isCompleted) {
-                    alert(message);
+                if (isCompleted) {
+                    router.refresh();
+                    setIsOpen(false);
 
-                    window.location.reload();
+                    toast({
+                        title: "Gestion de Tipo de Vehículo",
+                        description: message
+                    });
                 } else {
                     setError(message);
                 }
@@ -62,6 +70,7 @@ const VehicleTypeModal: React.FC<VehicleTypeModalProps> = (
 
     return (
         <ModalWrapper
+            open={isOpen} setOpen={setIsOpen}
             title={updateVehicleType ? "Editar Tipo de Vehículo" : "Añadir Tipo de Vehículo"}
             description={updateVehicleType ? `LLena el formulario para editar el tipo de vehículo ${vehicleType?.description}`
                 : "LLena el formulario para añadir un nuevo tipo de vehículo a la lista."

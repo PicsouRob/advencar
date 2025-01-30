@@ -15,7 +15,11 @@ const Customers = async () => {
                 <CustomerSheet />
             </div>
 
-            <DataTable hint="nombre" columns={customersColumns} data={customers} searchBy="name" />
+            <DataTable hint="nombre"
+                columns={customersColumns} 
+                data={customers} 
+                searchBy="name" 
+            />
         </div>
     );
 }

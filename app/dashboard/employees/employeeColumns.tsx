@@ -10,6 +10,8 @@ import { Employee } from "@prisma/client";
 import TooltipWrapper from "@/components/common/TooltipWrapper";
 import EmployeeSheet from "./EmployeeSheet";
 import { handleDeleteAction } from "@/utils/handleFetchAction";
+import { toast } from "@/hooks/use-toast";
+import { formatDate } from "@/utils/date";
 
 export const employeeColumns: ColumnDef<Employee>[] = [
     {
@@ -57,14 +59,8 @@ export const employeeColumns: ColumnDef<Employee>[] = [
         header: "Fecha de Contratación",
         cell: ({ getValue }) => {
             const rawDate: any = getValue(); // Original Value
-            const date = new Date(rawDate); // Convert to Date Object
 
-            return date.toLocaleDateString("es-ES", {
-                weekday: "short",
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-            });  // Format the date
+            return formatDate(rawDate);  // Format the date
         },
     },
     {
@@ -102,11 +98,16 @@ export const employeeColumns: ColumnDef<Employee>[] = [
                             await handleDeleteAction(`/api/employee/delete?id=${row.original.id}`,
                                 (isCompleted, message) => {
                                     if (isCompleted) {
-                                        alert(message);
-
-                                        window.location.reload();
+                                        toast({
+                                            title: "Eliminar Empleado",
+                                            description: message,
+                                        });
                                     } else {
-                                        alert(message);
+                                        toast({
+                                            title: "Error",
+                                            description: message,
+                                            variant: "destructive",
+                                        });
                                     }
                                 });
                         }}
